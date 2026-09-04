@@ -7,7 +7,6 @@
 [![Chain](https://img.shields.io/badge/chain-local_%7C_sepolia-orange.svg)]()
 [![License: MIT](https://img.shields.io/badge/solidity-MIT-lightgrey.svg)](src/chain/contracts/FaceVerificationRegistry.sol)
 
-**No hosted website. No hardcoded results. Full audit trail in `runs/<id>/`.**
 
 
 ---
