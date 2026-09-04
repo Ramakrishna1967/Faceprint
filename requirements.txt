@@ -1,0 +1,12 @@
+numpy
+Pillow
+requests
+deepface
+tensorflow
+tf-keras
+pytest
+web3
+eth-account
+py-solc-x
+google-cloud-vision
+opencv-python
