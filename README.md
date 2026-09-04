@@ -9,7 +9,6 @@
 
 **No hosted website. No hardcoded results. Full audit trail in `runs/<id>/`.**
 
-Companion spec: [`SYSTEM_ARCHITECTURE.md`](SYSTEM_ARCHITECTURE.md)
 
 ---
 
@@ -319,7 +318,6 @@ Faceprint/
 │   └── test_verify.py              # tampered payload fails
 ├── assets/sample_input.jpg         # Curated indexed single-face image (replace legally)
 ├── runs/                           # gitignored per-run artifacts
-├── SYSTEM_ARCHITECTURE.md          # Full design spec (source of truth)
 ├── requirements.txt / pyproject.toml
 └── .env.example
 ```
@@ -353,37 +351,5 @@ All tests run offline. Live Lens / Sepolia paths are manual (require keys + fund
 
 ---
 
-## Failure Modes & Troubleshooting
 
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| `[Stage1] ERROR: No usable face` | No/clear face | Use one frontal, well-lit face |
-| `[Stage2] ERROR: --image-url is required` | Lens needs URL | Pass a public HTTPS URL of the input |
-| `[Stage2] ERROR: SERPAPI_KEY is required` | Missing key | Set in `.env` |
-| `NO candidates / MATCHES_REJECTED` | Private image or strict threshold | Use indexed public face; lower `--threshold` (e.g. `0.5`); try `--vision-fallback` |
-| `SKIP (403/timeout/no face)` per candidate | Hotlink protection | Normal — pipeline skips and continues; needs ≥1 PASS |
-| `CHAIN_ERROR / insufficient funds` (Sepolia) | RPC down or dry account | Check `RPC_URL`, faucet Sepolia ETH, confirm `CONTRACT_ADDRESS` |
-| `TAMPERED` | Edited payload/image | Expected for tamper demo; re-run `run` for fresh receipt |
 
----
-
-## Limitations
-
-- Face similarity ≠ legal identity. Scores depend on model (`Facenet512`), detector (`retinaface`), lighting, age, thumbnails, and `--threshold`.
-- Lens needs a public, indexed image; private selfies and `Vision` non-matches will halt before hashing — by design.
-- `local` network is a persistent JSON simulation for offline demos, not a distributed chain. Use `sepolia` for independently checkable public proof.
-- Candidate thumbnails are low-resolution Lens previews; blocking/quotas affect reproducibility.
-
----
-
-## Roadmap
-
-- [x] Stages 1–5 CLI + local chain + Sepolia deploy
-- [x] Deterministic fingerprint + tamper demo
-- [ ] Largest-face selection + `--strict` multi-face abort
-- [ ] `embedding.npy` / `face_crop.jpg` audit artifacts
-- [ ] Backoff/cache for SerpAPI 429s, richer `MATCHES_REJECTED` diagnostics
-- [ ] CI + coverage for face/search with mocks
-- [ ] Unedited screen recording: `run → verify → tamper FAIL (+ Sepolia Etherscan)`
-
-See [`SYSTEM_ARCHITECTURE.md`](SYSTEM_ARCHITECTURE.md) for the full spec, trade-offs, and deliverables checklist.
